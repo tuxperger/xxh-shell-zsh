@@ -1,0 +1,2 @@
+# Binary payloads are fetched, not committed (./fetch.sh <os>-<arch>)
+dist/
