@@ -1,12 +1,39 @@
-# First-party zsh shell package (T020, §FR-008, Принцип IV: shells are plugins).
-# The binary payload is NOT committed: run ./fetch.sh to populate bin/<os>-<arch>/
-# with static, relocatable zsh builds for the platform matrix below.
+# First-party zsh shell package (Принцип IV: shells are plugins).
+# The binary payload is NOT committed: `xxh shell fetch zsh [--platform os-arch]`
+# downloads the static, relocatable zsh-bin builds declared below, checks their
+# SHA-256, unpacks them into dist/<os>-<arch>/, copies overlay/ on top and runs
+# hooks/post-fetch.sh (xxh 008, contracts/shell-package-builds.md).
 
 name = "zsh"
 version = "5.8.0"
-api_version = "1.0.0"
+api_version = "1.1.0"
 # Static musl builds work on any Linux libc; darwin builds are arch-specific.
 targets = ["linux", "darwin"]
 
 [provides]
 shell = "zsh"
+
+[hooks.post_fetch]
+run = "hooks/post-fetch.sh"
+
+# romkatv/zsh-bin v6.1.1 (zsh 5.8). Keys are xxh platform names: zsh-bin's
+# `darwin-arm64` is xxh's `darwin-aarch64`.
+[builds.linux-x86_64]
+url = "https://github.com/romkatv/zsh-bin/releases/download/v6.1.1/zsh-5.8-linux-x86_64.tar.gz"
+sha256 = "6df668fb6e9a12874e0d80518d582f2e99e512d4a4532fa73d938360aaddc838"
+
+[builds.linux-aarch64]
+url = "https://github.com/romkatv/zsh-bin/releases/download/v6.1.1/zsh-5.8-linux-aarch64.tar.gz"
+sha256 = "5caca77bcdaa218ec12e79f2e65c53c39058e0ed4f4f299991d18a800ca7c06d"
+
+[builds.linux-armv7l]
+url = "https://github.com/romkatv/zsh-bin/releases/download/v6.1.1/zsh-5.8-linux-armv7l.tar.gz"
+sha256 = "9bab9143011f0b13d65bd437687771cc94f8e269ade99b6ecd3191da01708bc5"
+
+[builds.darwin-x86_64]
+url = "https://github.com/romkatv/zsh-bin/releases/download/v6.1.1/zsh-5.8-darwin-x86_64.tar.gz"
+sha256 = "fba37a2fc286b0d8acfe73659a7ddce802689b8d5e76095d267651a182f7181f"
+
+[builds.darwin-aarch64]
+url = "https://github.com/romkatv/zsh-bin/releases/download/v6.1.1/zsh-5.8-darwin-arm64.tar.gz"
+sha256 = "db777549692029b7c1c0474cdc2affc2dc87a74a2971dfa7be1be1ffcab695e3"
